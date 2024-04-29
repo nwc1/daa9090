@@ -1,0 +1,559 @@
+BUBBLE SORT:
+
+function x=sort(n,y)
+disp("Enter numbers")
+for i = 1:n
+    x(i) = input('')
+end
+
+swapped = 0
+    while swapped == 0
+        swapped = 1
+        for i = 1:n-1
+            if x(i+1) < x(i) then
+                temp = x(i)
+                x(i) = x(i+1)
+                x(i+1) = temp
+                swapped = 0
+            end
+        end
+    end
+disp("sorted eles:")    
+endfunction
+
+a=input("Enter the number of values to sort: ")
+disp(sort(a))
+
+
+INSERTION SORT:
+
+function insertionSort(arr)
+    n = length(arr)
+    
+    for i = 1:n
+        key = arr(i)
+        j = i - 1
+        
+        while j > 0 && arr(j) > key
+            arr(j + 1) = arr(j)
+            j = j - 1
+        end
+        
+        arr(j + 1) = key
+    end
+    
+    disp(arr)
+endfunction
+
+//numbers = [5, 3, 1, 4, 2]
+for i=1:10
+    numbers(i)=input("enter a no ")
+end
+insertionSort(numbers)
+
+
+
+
+MERGESORT:
+
+function sortedArray=mergeSort(arr,start,last)
+    if start<last
+        mid = floor((start+last)/2);
+        left = mergeSort(arr,start,mid);
+        right = mergeSort(arr,mid+1,last);
+        sortedArray = merge(left,right);
+    else
+        sortedArray = arr(start);
+    end
+endfunction
+function mergedArray = merge(left,right)
+    i=1;
+    j=1;
+    k=1;
+    mergedArray = zeros(1,length(left)+length(right));
+    while i<=length(left) && j<=length(right)
+        if left(i)<right(j)
+            mergedArray(k) = left(i);
+            i=i+1;
+        else
+            mergedArray(k) = right(j);
+            j=j+1;
+        end
+        k=k+1;
+    end
+    while i<= length(left)
+        mergedArray(k)=left(i);
+        i=i+1;
+        k=k+1;
+    end
+    while j<= length(right)
+        mergedArray(k)=right(j);
+        j=j+1;
+        k=k+1;
+    end
+endfunction
+numbers=[12,15,11,5,6];
+disp("Original Array :")
+disp(numbers)
+sortedNumbers =mergeSort(numbers,1,length(numbers));
+disp("Sorted Array :")
+disp(sortedNumbers);
+
+
+
+
+LINEAR SEARCH:
+
+function linear_search(arr, num)
+    n = length(arr);
+    found = -1;
+
+    for i = 1:n
+        if arr(i) == num
+            found = i;
+            break;
+        end
+    end
+
+    if found == -1
+        disp("Number not found in the array.")
+    else
+        disp("Number found at position: " + string(found))
+    end
+end
+
+//Input 5 numbers from the user
+for i = 1:5
+    arr(i) = input("Enter number " + string(i) + ": ");
+end
+
+//Input the number to find
+num = input("Enter the number to find: ");
+
+//Call the linear_search function to find the number
+linear_search(arr, num)
+
+
+
+BINARY SEARCH:
+
+function index = binarySearch(arr, low, high, x)
+    if high >= low
+        mid = floor((high + low) / 2);
+        
+        if arr(mid+1) == x
+            index = mid + 1;
+        elseif arr(mid+1) > x
+            index = binarySearch(arr, low, mid - 1, x);
+        else
+            index = binarySearch(arr, mid + 1, high, x);
+        end
+    else
+        index = -1;
+    end
+endfunction
+
+// Test array
+arr = [2, 3, 4, 10, 40];
+x = 2;
+
+// Function call
+result = binarySearch(arr, 0, length(arr), x);
+
+if result ~= -1
+    disp(['Element is present at index ', string(result)]);
+else
+    disp('Element is not present in array');
+end
+
+
+
+RANDOM LINEAR:
+
+function linear_search(arr, num)
+    n = length(arr);
+    found = -1;
+
+    for i = 1:n
+        if arr(i) == num
+            found = i;
+            break;
+        end
+    end
+
+    if found == -1
+        disp("Number not found in the array.")
+    else
+        disp("Number found at position: " + string(found))
+    end
+end
+
+//Input 5 numbers from the user
+//for i = 1:5
+  //  arr(i) = input("Enter number " + string(i) + ": ");
+//end
+function arr= generateRandomIntArray(size, minValue, maxValue)
+    arr = round((maxValue - minValue + 1) * rand(1, size) + minValue - 0.5);
+endfunction
+
+sizeOfArray = input('Enter the size of the array: ');
+minValue = input('Enter the minimum value: ');
+maxValue = input('Enter the maximum value: ');
+
+arr = generateRandomIntArray(sizeOfArray, minValue, maxValue);
+
+disp('Generated Random Integer Array:');
+disp(arr);
+
+//Input the number to find
+num = input("Enter the number to find: ");
+
+//Call the linear_search function to find the number
+linear_search(arr, num)
+
+
+
+
+
+QUIck SORT:
+
+function arr = quickSort(arr, low, high)
+    if low < high
+        [arr, pivotIndex] = partition(arr, low, high);
+        arr = quickSort(arr, low, pivotIndex - 1);
+        arr = quickSort(arr, pivotIndex + 1, high);
+    end
+endfunction
+
+function [arr, pivotIndex] = partition(arr, low, high)
+    pivot = arr(high);
+    i = low - 1;
+
+    for j = low:high-1
+        if arr(j) <= pivot
+            i = i + 1;
+            [arr(i), arr(j)] = swap(arr(i), arr(j));
+        end
+    end
+
+    [arr(i+1), arr(high)] = swap(arr(i+1), arr(high));
+    pivotIndex = i + 1;
+endfunction
+
+function [a, b] = swap(a, b)
+    temp = a;
+    a = b;
+    b = temp;
+endfunction
+
+// Example usage
+function arr= generateRandomIntArray(size, minValue, maxValue)
+    arr = round((maxValue - minValue + 1) * rand(1, size) + minValue - 0.5);
+endfunction
+
+sizeOfArray = input('Enter the size of the array: ');
+minValue = input('Enter the minimum value: ');
+maxValue = input('Enter the maximum value: ');
+
+arr = generateRandomIntArray(sizeOfArray, minValue, maxValue);
+
+disp('Generated Random Integer Array:');
+disp(arr)
+disp('Original array:');
+disp(arr);
+
+arr = quickSort(arr, 1, length(arr));
+disp('Sorted array:');
+disp(arr);
+
+
+
+
+
+
+SELECTION SORT:
+
+function arr = selectionSort(arr)
+    n = length(arr);
+    
+    for i = 1:n-1
+        minIndex = i;
+        
+        for j = i+1:n
+            if arr(j) < arr(minIndex)
+                minIndex = j;
+            end
+        end
+        
+        if minIndex ~= i
+            [arr(i), arr(minIndex)] = swap(arr(i), arr(minIndex));
+        end
+    end
+endfunction
+
+function [a, b] = swap(a, b)
+    temp = a;
+    a = b;
+    b = temp;
+endfunction
+
+// Example usage
+function arr= generateRandomIntArray(size, minValue, maxValue)
+    arr = round((maxValue - minValue + 1) * rand(1, size) + minValue - 0.5);
+endfunction
+
+sizeOfArray = input('Enter the size of the array: ');
+minValue = input('Enter the minimum value: ');
+maxValue = input('Enter the maximum value: ');
+
+arr = generateRandomIntArray(sizeOfArray, minValue, maxValue);
+
+disp('Generated Random Integer Array:');
+disp(arr);
+disp('Original array:');
+disp(arr);
+
+arr = selectionSort(arr);
+disp('Sorted array:');
+disp(arr);
+
+
+
+COUNTING SORT:
+
+
+function sortedArr = countingSort(arr)
+    minVal = min(arr);
+    maxVal = max(arr);
+    range = maxVal - minVal + 1;
+    
+    countArray = zeros(1, range);
+    outputArray = zeros(1, length(arr));
+    
+    for i = 1:length(arr)
+        countArray(arr(i) - minVal + 1) = countArray(arr(i) - minVal + 1) + 1;
+    end
+    
+    for i = 2:range
+        countArray(i) = countArray(i) + countArray(i - 1);
+    end
+    
+    for i = length(arr):-1:1
+        outputArray(countArray(arr(i) - minVal + 1)) = arr(i);
+        countArray(arr(i) - minVal + 1) = countArray(arr(i) - minVal + 1) - 1;
+    end
+    
+    sortedArr = outputArray;
+endfunction
+
+// Example usage
+function arr= generateRandomIntArray(size, minValue, maxValue)
+    arr = round((maxValue - minValue + 1) * rand(1, size) + minValue - 0.5);
+endfunction
+
+sizeOfArray = input('Enter the size of the array: ');
+minValue = input('Enter the minimum value: ');
+maxValue = input('Enter the maximum value: ');
+
+arr = generateRandomIntArray(sizeOfArray, minValue, maxValue);
+
+disp('Generated Random Integer Array:');
+disp(arr);
+disp('Original array:');
+disp(arr);
+
+sortedArr = countingSort(arr);
+disp('Sorted array:');
+disp(sortedArr);
+
+
+
+
+TOPOLOGICAL SORT:
+
+function [sorted, topo_order] = topologicalSort(adj_matrix)
+    topo_order = []
+    n = size(adj_matrix, 1)
+    
+    // Step 1: Count incoming edges for each node
+    incoming_edges = zeros(1, n)
+    for i = 1:n do
+        for j = 1:n do
+            incoming_edges(i) = incoming_edges(i) + adj_matrix(j, i)
+        end
+    end
+    
+    // Step 2: Find nodes with no incoming edges
+    nodes_with_no_incoming_edges = []
+    for i = 1:n do
+        if incoming_edges(i) == 0 then
+            nodes_with_no_incoming_edges = [nodes_with_no_incoming_edges, i]
+        end
+    end
+    
+    // Step 3: Perform topological sort
+    while length(nodes_with_no_incoming_edges) > 0 do
+        node = nodes_with_no_incoming_edges(1)
+        nodes_with_no_incoming_edges = nodes_with_no_incoming_edges(2:length(nodes_with_no_incoming_edges))
+        topo_order = [topo_order, node]
+        
+        // Reduce incoming edgecount for nodes adjacent to 'node'
+        for i = 1:n do
+            if adj_matrix(node, i) == 1 then
+                incoming_edges(i) = incoming_edges(i) - 1
+                if incoming_edges(i) == 0 then
+                    nodes_with_no_incoming_edges = [nodes_with_no_incoming_edges, i]
+                end
+            end
+        end
+    end
+    
+    // Step 4: Check for cycles
+    if length(topo_order) < n then
+        sorted = "Cyclic graph"
+    else
+        sorted = "Topological sorting: " + string(topo_order)
+    end
+endfunction
+
+// define the adjacency matrix for the directed acyclic graph (DAG)
+adj_matrix = [0, 1, 1, 0, 0;
+              0, 0, 1, 1, 0;
+              0, 0, 0, 1, 1;
+              0, 0, 0, 0, 1;
+              0, 0, 0, 0, 0]
+
+// perform topological sorting
+[sorted, topo_order] = topologicalSort(adj_matrix)
+
+disp( topo_order )
+
+
+
+
+BFS:
+
+function breadthFirstSearch(graph, startNode)
+
+    visited = zeros(1, size(graph, 1));
+    queue = [];
+
+    visited(startNode) = 1;
+    queue = [queue, startNode];
+
+    while ~isempty(queue)
+        currentNode = queue(1);
+        queue = queue(2:$);
+
+        disp(currentNode);// % Replace with your desired functionality
+
+        neighbors = find(graph(currentNode, :) == 1);
+        for i = 1:length(neighbors)
+            neighbor = neighbors(i);
+            if visited(neighbor) == 0
+                visited(neighbor) = 1;
+                queue = [queue, neighbor];
+            end
+        end
+    end
+
+endfunction
+
+// Example usage:
+
+graph = [0 1 1 0 0;
+         1 0 1 1 0 ;
+         1 1 0 0 1;
+         0 1 0 0 1;
+         0 0 1 1 0  ];
+
+startNode = 1;
+breadthFirstSearch(graph, startNode)
+
+
+DFS ONLY:
+
+function dfs(graph, start)
+    stack = [];
+    visited = zeros(1, size(graph, 1));
+    
+    stack = [stack, start];
+    visited(start) = 1;
+    
+    while ~isempty(stack)
+        current = stack();
+        stack = stack(1:$-1);
+        
+        disp(current);  // Print or process the current node
+        
+        neighbors = find(graph(current, :));  // Find neighbors of current node
+        
+        for i = 1:length(neighbors)
+            neighbor = neighbors(i);
+            
+            if visited(neighbor) == 0
+                stack = [stack, neighbor];
+                visited(neighbor) = 1;
+            end
+        end
+    end
+end
+
+// Example usage:
+
+// Define a graph as an adjacency matrix
+G = [0 1 1 0 0;
+         1 0 1 1 0 ;
+         1 1 0 0 1;
+         0 1 0 0 1;
+         0 0 1 1 0];
+
+startNode = 1;  // Start node for DFS
+
+// Call the DFS function
+dfs(G, startNode);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

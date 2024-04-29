@@ -1,0 +1,602 @@
+COLORING:
+
+
+function chromaticNumber(graph)
+    n = size(graph, 1);
+    colors = zeros(1, n);
+    available = zeros(1, n);
+    
+    colors(1) = 1;
+    
+    for i = 2:n
+        for j = 1:n
+            if graph(i, j) == 1 && colors(j) ~= 0
+                available(colors(j)) = 1;
+            end
+        end
+        
+        cr = 1;
+        while available(cr) == 1
+            cr = cr + 1;
+        end
+        
+        colors(i) = cr;
+        
+        for j = 1:n
+            if graph(i, j) == 1 && colors(j) ~= 0
+                available(colors(j)) = 0;
+            end
+        end
+    end
+    
+    numColors = max(colors);
+    disp("Minimum number of time slots needed: " + string(numColors));
+endfunction
+
+// Example usage
+graph = [0 1 1 1 0; 1 0 1 0 1; 1 1 0 1 0; 1 0 1 0 1; 0 1 0 1 0];
+chromaticNumber(graph);
+
+
+
+
+
+MAZE:
+
+
+function move(m, n, x, y, maze)
+    maze(x, y) = 2;
+    disp(maze);
+  
+    if x == goal(1) & y == goal(2) then
+        return;
+    end
+    
+    if x < m & maze(x + 1, y) == 1 then
+        move(m, n, x + 1, y, maze);
+    end
+    
+    if y < n & maze(x, y + 1) == 1 then
+        move(m, n, x, y + 1, maze);
+    end
+     
+    if y > 1 & maze(x, y - 1) == 1 then
+        move(m, n, x, y - 1, maze);
+    end
+    
+    if x > 1 & maze(x - 1, y) == 1 then
+        move(m, n, x - 1, y, maze);
+    end
+endfunction
+
+function backtrack(x, y, maze)
+    maze(x, y) = 1;
+    disp(maze);
+    
+    if x == start(1) & y == start(2) then
+        return;
+    end
+    
+    if x < m & maze(x + 1, y) == 0 then
+        backtrack(x + 1, y, maze);
+    end
+    
+    if y < n & maze(x, y + 1) == 0 then
+        backtrack(x, y + 1, maze);
+    end
+    
+    if y > 1 & maze(x, y - 1) == 0 then
+        backtrack(x, y - 1, maze);
+    end
+    
+    if x > 1 & maze(x - 1, y) == 0 then
+        backtrack(x - 1, y, maze);
+    end
+endfunction
+
+maze = [1, 0, 0, 0; 
+        1, 1, 1, 1; 
+        0, 1, 0, 1; 
+        1, 0, 1, 1];
+start = [1, 1];
+goal = [4, 4];
+n = size(maze, 1);
+m = size(maze, 2);
+disp("MAZE:")
+disp(maze);
+disp("sequence:")
+move(m, n, start(1), start(2), maze);
+backtrack(goal(1), goal(2), maze);
+
+
+
+
+PRIMS:
+
+function [minCost, minTree] = primMST(graph)
+    n = size(graph, 1);
+    visited = zeros(1, n);
+    minCost = 0;
+    minTree = zeros(n, n);
+    
+    visited(1) = 1;
+    numEdges = 0;
+    
+    while numEdges < n-1
+        minWeight = %inf;
+        u = 0;
+        v = 0;
+        
+        for i = 1:n
+            if visited(i) == 1
+                for j = 1:n
+                    if visited(j) == 0 && graph(i, j) < minWeight
+                        minWeight = graph(i, j);
+                        u = i;
+                        v = j;
+                    end
+                end
+            end
+        end
+        
+        visited(v) = 1;
+        minTree(u, v) = minWeight;
+        minTree(v, u) = minWeight;
+        minCost = minCost + minWeight;
+        numEdges = numEdges + 1;
+    end
+end
+
+// Example usage
+graph = [0 2 0 6 0;
+         2 0 3 8 5;
+         0 3 0 0 7;
+         6 8 0 0 9;
+         0 5 7 9 0];
+[minCost, minTree] = primMST(graph);
+disp("Minimum Cost: " + string(minCost));
+disp("Minimum Cost Spanning Tree:");
+disp(minTree);
+
+
+
+DIJIKSTRA'S :
+
+
+function printSolution(dist)
+    printf('Vertex \t Distance from Source\n');
+    for node = 1:length(dist)
+        printf('%d \t\t %d\n', node-1, dist(node));
+    end
+endfunction
+
+function min_index = minDistance(dist, sptSet)
+   
+    min = 1e7;
+
+    
+    for v = 1:length(dist)
+        if dist(v) < min && ~sptSet(v)
+            min = dist(v);
+            min_index = v;
+        end
+    end
+endfunction
+
+function dijkstra(graph, src)
+    numVertices = size(graph, 1);
+    dist = ones(1, numVertices) * 1e7;
+    dist(src + 1) = 0;
+    sptSet = zeros(1, numVertices);
+
+    for cout = 1:numVertices
+        u = minDistance(dist, sptSet);
+
+        
+        sptSet(u) = 1;
+
+       
+        for v = 1:numVertices
+            if (graph(u, v) > 0 && ~sptSet(v) && dist(v) > dist(u) + graph(u, v))
+                dist(v) = dist(u) + graph(u, v);
+            end
+        end
+    end
+
+    printSolution(dist);
+endfunction
+
+
+graph = [
+    0 4 0 0 0 0 0 8 0;
+    4 0 8 0 0 0 0 11 0;
+    0 8 0 7 0 4 0 0 2;
+    0 0 7 0 9 14 0 0 0;
+    0 0 0 9 0 10 0 0 0;
+    0 0 4 14 10 0 2 0 0;
+    0 0 0 0 0 2 0 1 6;
+    8 11 0 0 0 0 1 0 7;
+    0 0 2 0 0 0 6 7 0
+];
+
+dijkstra(graph, 1);
+
+
+
+
+JOB SEQUENCING:
+
+function [sequence, profit] = jobSequencing(deadlines, profits)
+    n = length(deadlines);
+    sequence = zeros(1, n);
+    slot = zeros(1, n);
+    for i = 1:n
+        slot(i) = i;
+    end
+
+    for i = 1:n
+        for j = min(n, deadlines(i)):-1:1
+            if slot(j) != 0
+                sequence(i) = slot(j);
+                slot(j) = 0;
+                break;
+            end
+        end
+    end
+
+    profit = 0;
+    for i = 1:n
+        if sequence(i) != 0
+            profit = profit + profits(sequence(i));
+        end
+    end
+end
+
+// Example usage
+deadlines = [2,1,2,1];
+profits = [30,35,20,25];
+
+[sequence, profit] = jobSequencing(deadlines, profits);
+disp("Job sequence: ");
+disp(sequence);
+disp("Total profit: ");
+disp(profit)
+
+
+
+NUT and BOLTS:
+
+function arr=swap(arr, i, j)
+    temp = arr(i);
+    arr(i) = arr(j);
+    arr(j) = temp;
+endfunction
+
+
+function arr=quickSort(arr, low, high, pivot)
+    while low < high
+        while arr(low) < pivot
+            low = low + 1;
+        end
+        while arr(high) > pivot
+            high = high - 1;
+        end
+        if low <= high
+            arr = swap(arr, low, high);
+            low = low + 1;
+            high = high - 1;
+        end
+    end
+    if low < high
+        arr = quickSort(arr, low, high, pivot);
+    end
+endfunction
+
+
+function matchNutsAndBolts(nuts, bolts)
+    if length(nuts) ~= length(bolts)
+        disp("Error: Number of nuts and bolts must be the same.");
+        return;
+    end
+
+    pivot = nuts(1); 
+    
+  
+    nuts = quickSort(nuts, 1, length(nuts), pivot);
+    bolts = quickSort(bolts, 1, length(bolts), pivot);
+
+    disp("Matched Nuts and Bolts:");
+    for i = 1:length(nuts)
+        disp("Nut: " + string(nuts(i)) + ", Bolt: " + string(bolts(i)));
+    end
+endfunction
+
+
+nuts = [3, 1, 2, 4, 5];
+bolts = [2, 3, 1, 4, 5];
+
+matchNutsAndBolts(nuts, bolts);
+
+
+
+MINIMIZATION(WORKERS:)
+
+
+function assignment = greedyFcfsJobSequencing(costMatrix)
+    N = size(costMatrix, 1);
+    assignment = zeros(N, 1);
+
+    for i = 1:N
+        // Worker i picks the job with the lowest cost available
+        [minVal, minIndex] = min(costMatrix(i, :));
+       
+        // Store the job assignment for the worker
+        assignment(i) = minIndex;
+       
+        // Ensure this job isn't selected again by any other worker
+        costMatrix(:, minIndex) = %inf;
+    end
+endfunction
+
+// Get user input for the number of jobs/workers
+N = input("Enter the number of workers: ");
+
+// Initialize costMatrix
+costMatrix = zeros(N, N);
+
+// Get user input for the cost matrix values
+disp("Enter the cost matrix values:");
+for i = 1:N
+    for j = 1:N
+        costMatrix(i, j) = input("Enter the cost for Worker " + string(i) + " for Job " + string(j) + ": ");
+    end
+end
+
+disp("Cost Matrix:");
+disp(costMatrix);
+
+assignment = greedyFcfsJobSequencing(costMatrix);
+
+disp("Assignment (Worker -> Job) using Greedy FCFS:");
+for i = 1:length(assignment)
+     disp("Worker " + string(i) + " -> Job " + string(assignment(i)));
+end       
+
+
+TSP:
+function move(cost, visited, tour, count, col1, distance_matrix)
+    mini = 999;
+    n = 4;
+    if (count == 3)
+        visited(1) = 0
+    end
+    if (count >= n)
+        disp(tour);
+        disp(cost)
+        return;
+    end
+
+    for i = col1
+        for j = 1 : 4
+            if (visited(j) ~= 1)
+                if (distance_matrix(i, j) < mini)
+                    mini = distance_matrix(i, j);
+                    col = j;
+                end
+            end
+        end
+    end
+    cost = cost + distance_matrix(col1, col)
+    disp(cost)
+    visited(1) = 1
+    visited(col) = 1;
+    count = count + 1;
+    tour = [tour, col];
+    
+    move(cost, visited, tour, count, col, distance_matrix);
+endfunction
+
+distance_matrix = [999999 4 1 3; 4 999999 2 1; 1 2 999999 5; 3 1 5 999999];
+tour = [];
+count = 0;
+col = 1;
+cost = 0;
+visited = zeros(1, 4);
+move(cost, visited, tour, count, col, distance_matrix);
+
+
+
+//another tsp
+function tsp_nearest_neighbor(cities)
+    n=size(cities,1)//no.of cities
+    tour=zeros(1,n)//initialize the tour
+    visited=zeros(1,n)//track visited cities
+    
+    //Start from the first city
+    current_city=1
+    tour(1)=current_city
+    visited(1)=1
+    
+    for i=2:n
+        min_distance=%inf
+        for j=1:n
+            if j~=current_city && visited(j)==0
+                distance = norm(cities(current_city,:)-cities(j,:))
+                if distance<min_distance
+                    min_distance=distance
+                    tour(i)=j
+                end 
+            end
+    end
+    visited(tour(i))=1
+    current_city=tour(i)
+end
+
+//return to the starting city to complete the tpur
+tour(n+1)=tour(1)
+
+//calculate the total tour length
+total_distance=0
+for i=1:n
+    total_distance=total_distance+norm(cities(tour(i),:)-cities(tour(i+1),:))
+end
+
+disp("Tour order:")
+disp(tour)
+//disp(["Total tour length:",string(total_distance)])
+end
+
+cities=[0 10 15 20;
+        10 0 35 25;
+        15 35 0 30;
+        20 25 30 0]
+tsp_nearest_neighbor(cities)
+
+
+
+// diskraj 
+
+
+function[l]=short(adj,w,i1,j1,n)
+  for i=1:n
+    for j=1:n
+      if(w((i-1)*n+j)==0)
+        w((i-1)*n+j)=9999;
+      end
+    end
+  end
+  
+  distance=[];
+  perm=[];
+  for i=1:n
+    distance=[distance(:,:) 99999];
+    perm=[perm(:,:) 0];
+  end
+  perm(i1)=1;
+  distance(i1)=0;
+  current=i1;
+  while(current~=j1)
+    smalldist=9999;
+    dc=distance(current);
+    for i=1:n
+      if(perm(i)==0)
+        newdist=dc+w((current-1)*n+i);
+        if(newdist<distance(i))
+          distance(i)=newdist;
+        end
+        if(distance(i)<smalldist)
+          smalldist=distance(i);
+          k=i;
+        end
+      end  
+    end
+    current=k;
+    perm(current)=1;
+  end
+  l=distance(j1);
+  printf("The  shortest path between %d and %d is %d",i1,j1,l);
+endfunction
+//Calling Routine:
+n=3;
+adj=[0 1 1 0 0 1 0 0 0]//Adjacency  List
+w=[0 12 22 0 0 9 0 0 0]//weight list fill 0 for no edge
+short(adj,w,1,3,n);
+
+
+//subset
+
+function subsetSum(set, n, targetSum)
+    dp = zeros(n + 1, targetSum + 1);
+
+    // Initialize the first column
+    for i = 1:n + 1
+        dp(i, 1) = 1;
+    end
+
+    // Build the DP table
+    for i = 2:n + 1
+        for j = 2:targetSum + 1
+            dp(i, j) = dp(i - 1, j) | (j >= set(i - 1) & dp(i - 1, j - set(i - 1)));
+        end
+    end
+
+    // Check if a subset with the given sum exists
+    if dp(n + 1, targetSum) == 0 then
+        disp("No subset found with the given sum.");
+        return;
+    end
+
+    // Reconstruct the subset
+    subset = [];
+    i = n + 1;
+    j = targetSum;
+    while (i > 1) & (j > 0)
+        while i > 1 & (dp(i, j) == dp(i - 1, j))
+            i = i - 1;
+        end
+
+        if i > 1
+            subset = [set(i - 1), subset];
+            j = j - set(i - 1);
+        end
+        i = i - 1;
+    end
+
+    disp("Subset with the given sum:");
+    disp(subset);
+end
+
+// Example usage:
+S = [1, 2, 5, 6, 8];
+d = 9;
+
+subsetSum(S, length(S), d);
+
+
+//0/1 knapsack
+
+
+function knapsack(values, weights, capacity)
+    n = length(values);
+    dp = zeros(n + 1, capacity + 1);
+
+    // Build the DP table
+    for i = 1:n + 1
+        for w = 1:capacity + 1
+            if (i == 0) | (w == 0)
+                dp(i, w) = 0;
+                elseif weights(i) <= w
+                dp(i, w) = max(dp(i - 1, w), values(i) + dp(i - 1, w - weights(i)));
+                    else
+                dp(i, w) = dp(i - 1, w);
+                end
+        end
+    end
+
+    // Reconstruct the solution
+    selectedItems = [];
+    i = n + 1;
+    w = capacity;
+
+    while i > 0 & w > 0
+        if dp(i, w) ~= dp(i - 1, w) then
+            selectedItems = [i - 1, selectedItems];
+            i = i - 1;
+            w = w - weights(i);
+        else
+            i = i - 1;
+        end
+    end
+
+    disp("Selected items for maximum value:");
+    disp(selectedItems);
+    disp("Maximum value: " + dp(n + 1, capacity));
+end
+
+// Example usage:
+values = [60, 100, 120];
+weights = [10, 20, 30];
+capacity = 50;
+
+knapsack(values, weights, capacity);
+
